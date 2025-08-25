@@ -34,7 +34,7 @@ Deployed on **Render**:
 
 ## 📁 Project Structure
 
-.
+
 ├── app.py # Main Flask app
 
 ├── .env # Local dev environment variables (not pushed)
