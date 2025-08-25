@@ -8,7 +8,8 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Needed for session management
 
 # MongoDB connection
-client = MongoClient('mongodb://localhost:27017/')
+mongo_uri = os.environ.get("MONGO_URI")  # Fetches from environment variable
+client = MongoClient(mongo_uri)
 db = client['Anime']
 
 # Collections
