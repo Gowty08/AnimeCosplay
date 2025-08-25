@@ -36,9 +36,13 @@ Deployed on **Render**:
 
 .
 ├── app.py # Main Flask app
+
 ├── .env # Local dev environment variables (not pushed)
+
 ├── requirements.txt # Python dependencies
+
 ├── README.md
+
 └── ...
 
 ---
