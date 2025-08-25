@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - AnimeCosplay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-mask"></i>
+                    <span>AnimeCosplay</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="{{ url_for('products') }}"><i class="fas fa-tshirt"></i> Products</a></li>
+                        <li><a href="{{ url_for('view_cart') }}"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+                        <li>
+                            <a href="{{ url_for('view_cart') }}" class="cart-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-count">{{ cart_count }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Shopping Cart -->
+    <section id="cart">
+        <div class="container">
+            <h2 class="section-title">Shopping Cart</h2>
+            <div class="cart-container">
+                <div class="cart-items">
+                    {% if cart_items %}
+                        {% for item in cart_items %}
+                        <!-- Cart Item -->
+                        <div class="cart-item" data-product-id="{{ item._id }}">
+                            <div class="cart-item-info">
+                                <img src="{{ item.image_url }}" alt="{{ item.name }}" class="cart-item-image">
+                                <div class="cart-item-details">
+                                    <h3>{{ item.name }}</h3>
+                                    <div class="cart-item-price">${{ item.price }}</div>
+                                </div>
+                            </div>
+                            <div class="cart-item-actions">
+                                <div class="cart-item-quantity">
+                                    <button class="quantity-btn">-</button>
+                                    <input type="text" class="quantity-input" value="1">
+                                    <button class="quantity-btn">+</button>
+                                </div>
+                                <button class="remove-item">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="empty-cart">Your cart is empty. <a href="{{ url_for('products') }}">Continue shopping</a></p>
+                    {% endif %}
+                </div>
+
+                {% if cart_items %}
+                <div class="cart-summary">
+                    <div class="summary-item">
+                        <span>Subtotal:</span>
+                        <span>${{ "%.2f"|format(total) }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Shipping:</span>
+                        <span>$15.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Tax:</span>
+                        <span>${{ "%.2f"|format(total * 0.08) }}</span>
+                    </div>
+                    <div class="summary-item summary-total">
+                        <span>Total:</span>
+                        <span>${{ "%.2f"|format(total + 15 + (total * 0.08)) }}</span>
+                    </div>
+                    <a href="{{ url_for('checkout') }}" class="btn" style="width: 100%; text-align: center; margin-top: 20px;">Proceed to Checkout</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>AnimeCosplay</h3>
+                    <p>Your premier destination for high-quality anime cosplay costumes and accessories. Bringing your favorite characters to life since 2015.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="{{ url_for('products') }}">All Products</a></li>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Best Sellers</a></li>
+                        <li><a href="#">Sale Items</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                    <p style="margin-top: 20px;">Subscribe to our newsletter for updates</p>
+                    <input type="email" class="form-control" placeholder="Your email" style="margin-top: 10px;">
+                    <button class="btn" style="width: 100%; margin-top: 10px;">Subscribe</button>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 AnimeCosplay. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent);"></i> for anime fans</p>
+            </div>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

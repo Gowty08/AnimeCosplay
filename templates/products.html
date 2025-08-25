@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products - AnimeCosplay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-mask"></i>
+                    <span>AnimeCosplay</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="{{ url_for('products') }}"><i class="fas fa-tshirt"></i> Products</a></li>
+                        <li><a href="{{ url_for('view_cart') }}"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+                        <li>
+                            <a href="{{ url_for('view_cart') }}" class="cart-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-count">{{ cart_count }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Products Banner -->
+    <section class="page-banner">
+        <div class="container">
+            <h1>All Cosplay Products</h1>
+            <p>Discover our complete collection of premium anime cosplay costumes and accessories</p>
+        </div>
+    </section>
+
+    <!-- Products Filter -->
+    <section class="products-filter">
+        <div class="container">
+            <div class="filter-content">
+                <div class="filter-group">
+                    <label for="category-filter">Category:</label>
+                    <select id="category-filter" class="filter-select">
+                        <option value="all">All Categories</option>
+                        <option value="costume">Costumes</option>
+                        <option value="accessory">Accessories</option>
+                        <option value="weapon">Weapons</option>
+                        <option value="wig">Wigs</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="series-filter">Series:</label>
+                    <select id="series-filter" class="filter-select">
+                        <option value="all">All Series</option>
+                        <option value="naruto">Naruto</option>
+                        <option value="attack-on-titan">Attack on Titan</option>
+                        <option value="my-hero-academia">My Hero Academia</option>
+                        <option value="demon-slayer">Demon Slayer</option>
+                        <option value="one-piece">One Piece</option>
+                        <option value="dragon-ball">Dragon Ball</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sort-filter">Sort by:</label>
+                    <select id="sort-filter" class="filter-select">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Customer Rating</option>
+                        <option value="newest">Newest Arrivals</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <button class="btn filter-btn">Apply Filters</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products">
+        <div class="container">
+            <h2 class="section-title">All Products</h2>
+            <p class="section-subtitle">Showing {{ products|length }} products</p>
+            
+            <div class="products-grid">
+                {% for product in products %}
+                <!-- Product Card -->
+                <div class="product-card" data-product-id="{{ product._id }}" data-category="{{ product.category }}" data-series="{{ product.series }}">
+                    <div class="product-image-container">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
+                        {% if product.featured %}
+                        <span class="featured-badge">Featured</span>
+                        {% endif %}
+                        {% if product.in_stock == false %}
+                        <span class="out-of-stock-badge">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">{{ product.name }}</h3>
+                        <p class="product-description">{{ product.description }}</p>
+                        <div class="product-price">${{ product.price }}</div>
+                        <div class="product-rating">
+                            {% for i in range(5) %}
+                                {% if i < product.rating|int %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    {% if product.rating - i > 0 and product.rating - i < 1 %}
+                                        <i class="fas fa-star-half-alt"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <span class="rating-count">({{ product.review_count }})</span>
+                        </div>
+                        <div class="product-actions">
+                            {% if product.in_stock %}
+                            <button class="btn add-to-cart">Add to Cart</button>
+                            {% else %}
+                            <button class="btn" disabled>Out of Stock</button>
+                            {% endif %}
+                            <button class="btn view-details">Details</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <span class="pagination-info">Page 1 of 3</span>
+                <button class="pagination-btn">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2>Stay Updated</h2>
+                <p>Subscribe to our newsletter to get updates on new products, exclusive offers, and cosplay tips.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" class="newsletter-input">
+                    <button type="submit" class="btn newsletter-btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>AnimeCosplay</h3>
+                    <p>Your premier destination for high-quality anime cosplay costumes and accessories. Bringing your favorite characters to life since 2015.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="{{ url_for('products') }}">All Products</a></li>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Best Sellers</a></li>
+                        <li><a href="#">Sale Items</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                    <p style="margin-top: 20px;">Subscribe to our newsletter for updates</p>
+                    <input type="email" class="form-control" placeholder="Your email" style="margin-top: 10px;">
+                    <button class="btn" style="width: 100%; margin-top: 10px;">Subscribe</button>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 AnimeCosplay. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--accent);"></i> for anime fans</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Product Modal (for details view) -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <!-- Product details will be loaded here via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Products page functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add to cart buttons
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const productCard = this.closest('.product-card');
+                    const productId = productCard.dataset.productId;
+                    const productName = productCard.querySelector('.product-title').textContent;
+
+                    // Send AJAX request to add to cart
+                    fetch('/add_to_cart', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `product_id=${productId}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(`${productName} added to cart!`);
+                            // Update cart count in header
+                            const cartCountElements = document.querySelectorAll('.cart-count');
+                            cartCountElements.forEach(element => {
+                                element.textContent = data.cart_count;
+                            });
+                        }
+                    });
+                });
+            });
+
+            // View details buttons
+            const viewDetailsButtons = document.querySelectorAll('.view-details');
+            viewDetailsButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const productCard = this.closest('.product-card');
+                    const productId = productCard.dataset.productId;
+
+                    // In a real application, you would fetch product details from the server
+                    // For now, we'll just show a simple message
+                    const modal = document.getElementById('product-modal');
+                    const modalBody = modal.querySelector('.modal-body');
+
+                    modalBody.innerHTML = `
+                        <h2>Product Details</h2>
+                        <p>Detailed view for product ID: ${productId}</p>
+                        <p>In a complete implementation, this would show full product details, 
+                        additional images, size options, etc.</p>
+                    `;
+                        
+                    modal.style.display = 'block';
+                });
+            });
+
+            // Close modal
+            document.querySelector('.close-modal').addEventListener('click', function() {
+                document.getElementById('product-modal').style.display = 'none';
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('product-modal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // Filter functionality
+            const categoryFilter = document.getElementById('category-filter');
+            const seriesFilter = document.getElementById('series-filter');
+            const sortFilter = document.getElementById('sort-filter');
+            const filterBtn = document.querySelector('.filter-btn');
+
+            filterBtn.addEventListener('click', function() {
+                const category = categoryFilter.value;
+                const series = seriesFilter.value;
+                const sort = sortFilter.value;
+
+                // In a real application, you would send these filters to the server
+                // and get back filtered results. For now, we'll just show an alert.
+                alert(`Filters applied:\nCategory: ${category}\nSeries: ${series}\nSort: ${sort}`);
+
+                // This would be replaced with actual filtering code
+                filterProducts(category, series, sort);
+            });
+
+            // Simulated filtering function
+            function filterProducts(category, series, sort) {
+                const productCards = document.querySelectorAll('.product-card');
+
+                productCards.forEach(card => {
+                    let show = true;
+
+                    // Category filter
+                    if (category !== 'all' && card.dataset.category !== category) {
+                        show = false;
+                    }
+
+                    // Series filter
+                    if (series !== 'all' && card.dataset.series !== series) {
+                        show = false;
+                    }
+
+                    // Show or hide based on filters
+                    card.style.display = show ? 'block' : 'none';
+                });
+
+                // Update product count
+                const visibleProducts = document.querySelectorAll('.product-card[style="display: block"]').length;
+                document.querySelector('.section-subtitle').textContent = `Showing ${visibleProducts} products`;
+            }
+
+            // Pagination buttons
+            const paginationBtns = document.querySelectorAll('.pagination-btn');
+            paginationBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // In a real application, this would load the next/previous page of products
+                    alert('Pagination would load more products in a complete implementation.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
