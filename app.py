@@ -162,6 +162,3 @@ def checkout():
 def order_confirmation():
     cart_count = 0
     return render_template("order_confirmation.html", cart_count=cart_count)
-
-if __name__ == "__main__":
-    app.run(debug=True)
